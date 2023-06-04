@@ -6,10 +6,10 @@ different components for example the CPU and Memory
 There are different types of buses such as external buses for devices such as 
 printers 
 
-video tutorial followed: https://www.youtube.com/watch?v=8XmxKPJDGU0&t=1539s
-
+video tutorial for reference: https://www.youtube.com/watch?v=8XmxKPJDGU0&t=1539s
 
 */
+
 #ifndef BUS_H
 #define BUS_H
 

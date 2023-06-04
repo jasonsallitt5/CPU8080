@@ -1,9 +1,8 @@
 /*
-Driver.cpp will be the main file that runs the cpu
-that means the cpu oject is created
-system that runs each instruction incrementally for testing purposes
-Also will have to draw the RAM for instpection so we know which 
-
+Driver.cpp will be the main file that runs the Bus
+The bus object contains the CPU and other objects
+The bus is essentaily the "computer" and will hold everything because it 
+connects all the pieces together
 */
 #include "CPU8080.h"
 #include "Bus.h"
@@ -18,7 +17,7 @@ int main(){
     std::cout << "\nStart of the INTEL 8080 CPU test\n" << std::endl;
 
     /*
-    //possibly give cpu a file to dissassmble
+    //give cpu a file to dissassmble
     string fileName;
     std::cout << "enter file name:";
     std::cin >> fileName;
@@ -27,7 +26,7 @@ int main(){
     //or maybe figure out a way to integrate this into the cpu so 
     */
 
-    //dont have to make a cpu because the bus already constructs it
+    //note: you dont have to make a cpu because the bus already has one
     Bus bus;
 
     std::string exitFlag;
