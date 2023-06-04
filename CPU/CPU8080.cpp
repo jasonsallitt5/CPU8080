@@ -1,7 +1,7 @@
 
 #include "CPU8080.h"
-#include "Bus.h" //this has to be included to use any bus functions
 
+#include "Bus.h" //this has to be included to use any bus functions
 
 #include <iostream>
 
@@ -1052,6 +1052,248 @@ uint8_t CPU8080::SUBB(){
     return 0;
 }
 
+//Opcode  instruction  size   flags         function
+//0x91	  SUB C 	   1	  Z,S,P,CY,AC	A <- A - C
+uint8_t CPU8080::SUBC(){
+
+    uint8_t ans =  a - c;
+
+    SetFlag(Z, !(ans && 0xff));       //zero
+    SetFlag(S,  (ans && 0x80));       //sign
+    SetFlag(P, Parity((uint8_t)ans)); //parity (num of bits is even)
+    SetFlag(C,  (ans > 0xff));        //carry
+    
+    a = (uint8_t) ans;
+    return 0;
+}
+
+//Opcode  instruction  size   flags         function
+//0x92	  SUB D 	   1	  Z,S,P,CY,AC	A <- A - D
+uint8_t CPU8080::SUBD(){
+
+    uint8_t ans =  a - d;
+
+    SetFlag(Z, !(ans && 0xff));       //zero
+    SetFlag(S,  (ans && 0x80));       //sign
+    SetFlag(P, Parity((uint8_t)ans)); //parity (num of bits is even)
+    SetFlag(C,  (ans > 0xff));        //carry
+    
+    a = (uint8_t) ans;
+    return 0;
+}
+
+//Opcode  instruction  size   flags         function
+//0x93	  SUB E 	   1	  Z,S,P,CY,AC	A <- A - E
+uint8_t CPU8080::SUBE(){
+
+    uint8_t ans =  a - e;
+
+    SetFlag(Z, !(ans && 0xff));       //zero
+    SetFlag(S,  (ans && 0x80));       //sign
+    SetFlag(P, Parity((uint8_t)ans)); //parity (num of bits is even)
+    SetFlag(C,  (ans > 0xff));        //carry
+    
+    a = (uint8_t) ans;
+    return 0;
+}
+
+//Opcode  instruction  size   flags         function
+//0x94	  SUB H 	   1	  Z,S,P,CY,AC	A <- A - H
+uint8_t CPU8080::SUBH(){
+
+    uint8_t ans =  a - h;
+
+    SetFlag(Z, !(ans && 0xff));       //zero
+    SetFlag(S,  (ans && 0x80));       //sign
+    SetFlag(P, Parity((uint8_t)ans)); //parity (num of bits is even)
+    SetFlag(C,  (ans > 0xff));        //carry
+    
+    a = (uint8_t) ans;
+    return 0;
+}
+
+//Opcode  instruction  size   flags         function
+//0x95	  SUB L 	   1	  Z,S,P,CY,AC	A <- A - L
+uint8_t CPU8080::SUBL(){
+
+    uint8_t ans =  a - l;
+
+    SetFlag(Z, !(ans && 0xff));       //zero
+    SetFlag(S,  (ans && 0x80));       //sign
+    SetFlag(P, Parity((uint8_t)ans)); //parity (num of bits is even)
+    SetFlag(C,  (ans > 0xff));        //carry
+    
+    a = (uint8_t) ans;
+    return 0;
+}
+
+//Opcode  instruction  size   flags         function
+//0x96	  SUB M 	   1	  Z,S,P,CY,AC	A <- A - (HL)
+uint8_t CPU8080::SUBM(){
+
+    //cast each to a 16bit, shift h, then add them together
+    uint16_t h16 = (uint16_t) h;
+    h16 = (h16 << 8);
+    uint16_t l16 = (uint16_t) l;
+    uint16_t addrHL = h16 + l16;
+
+    uint8_t hldata = read(addrHL);
+
+
+    uint8_t ans =  a - hldata;
+
+    SetFlag(Z, !(ans && 0xff));       //zero
+    SetFlag(S,  (ans && 0x80));       //sign
+    SetFlag(P, Parity((uint8_t)ans)); //parity (num of bits is even)
+    SetFlag(C,  (ans > 0xff));        //carry
+    
+    a = (uint8_t) ans;
+    return 0;
+}
+
+//Opcode  instruction  size   flags         function
+//0x97	  SUB A 	   1	  Z,S,P,CY,AC	A <- A - A
+uint8_t CPU8080::SUBA(){
+
+    uint8_t ans =  a - a;
+
+    SetFlag(Z, !(ans && 0xff));       //zero
+    SetFlag(S,  (ans && 0x80));       //sign
+    SetFlag(P, Parity((uint8_t)ans)); //parity (num of bits is even)
+    SetFlag(C,  (ans > 0xff));        //carry
+    
+    a = (uint8_t) ans;
+    return 0;
+}
+
+//Opcode  instruction  size   flags         function
+//0x98	  SBB B 	   1	  Z,S,P,CY,AC	A <- A - B - CY
+uint8_t CPU8080::SBBB(){
+
+    uint8_t ans =  a - b - GetFlag(C);
+
+    SetFlag(Z, !(ans && 0xff));       //zero
+    SetFlag(S,  (ans && 0x80));       //sign
+    SetFlag(P, Parity((uint8_t)ans)); //parity (num of bits is even)
+    SetFlag(C,  (ans > 0xff));        //carry
+    
+    a = (uint8_t) ans;
+    return 0;
+}
+
+//Opcode  instruction  size   flags         function
+//0x99	  SBB C 	   1	  Z,S,P,CY,AC	A <- A - C - CY
+uint8_t CPU8080::SBBC(){
+
+    uint8_t ans =  a - c - GetFlag(C);
+
+    SetFlag(Z, !(ans && 0xff));       //zero
+    SetFlag(S,  (ans && 0x80));       //sign
+    SetFlag(P, Parity((uint8_t)ans)); //parity (num of bits is even)
+    SetFlag(C,  (ans > 0xff));        //carry
+    
+    a = (uint8_t) ans;
+    return 0;
+}
+
+//Opcode  instruction  size   flags         function
+//0x9a	  SBB D 	   1	  Z,S,P,CY,AC	A <- A - D - CY
+uint8_t CPU8080::SBBD(){
+
+    uint8_t ans =  a - d - GetFlag(C);
+
+    SetFlag(Z, !(ans && 0xff));       //zero
+    SetFlag(S,  (ans && 0x80));       //sign
+    SetFlag(P, Parity((uint8_t)ans)); //parity (num of bits is even)
+    SetFlag(C,  (ans > 0xff));        //carry
+    
+    a = (uint8_t) ans;
+    return 0;
+}
+
+//Opcode  instruction  size   flags         function
+//0x9b	  SBB E 	   1	  Z,S,P,CY,AC	A <- A - E - CY
+uint8_t CPU8080::SBBE(){
+
+    uint8_t ans =  a - e - GetFlag(C);
+
+    SetFlag(Z, !(ans && 0xff));       //zero
+    SetFlag(S,  (ans && 0x80));       //sign
+    SetFlag(P, Parity((uint8_t)ans)); //parity (num of bits is even)
+    SetFlag(C,  (ans > 0xff));        //carry
+    
+    a = (uint8_t) ans;
+    return 0;
+}
+
+//Opcode  instruction  size   flags         function
+//0x9c	  SBB H 	   1	  Z,S,P,CY,AC	A <- A - H - CY
+uint8_t CPU8080::SBBH(){
+
+    uint8_t ans =  a - h - GetFlag(C);
+
+    SetFlag(Z, !(ans && 0xff));       //zero
+    SetFlag(S,  (ans && 0x80));       //sign
+    SetFlag(P, Parity((uint8_t)ans)); //parity (num of bits is even)
+    SetFlag(C,  (ans > 0xff));        //carry
+    
+    a = (uint8_t) ans;
+    return 0;
+}
+
+//Opcode  instruction  size   flags         function
+//0x9d	  SBB L 	   1	  Z,S,P,CY,AC	A <- A - L - CY
+uint8_t CPU8080::SBBL(){
+
+    uint8_t ans =  a - l - GetFlag(C);
+
+    SetFlag(Z, !(ans && 0xff));       //zero
+    SetFlag(S,  (ans && 0x80));       //sign
+    SetFlag(P, Parity((uint8_t)ans)); //parity (num of bits is even)
+    SetFlag(C,  (ans > 0xff));        //carry
+    
+    a = (uint8_t) ans;
+    return 0;
+}
+
+//Opcode  instruction  size   flags         function
+//0x9e	  SBB M 	   1	  Z,S,P,CY,AC	A <- A - (HL) - CY
+uint8_t CPU8080::SBBM(){
+
+    //cast each to a 16bit, shift h, then add them together
+    uint16_t h16 = (uint16_t) h;
+    h16 = (h16 << 8);
+    uint16_t l16 = (uint16_t) l;
+    uint16_t addrHL = h16 + l16;
+
+    uint8_t hldata = read(addrHL);
+
+
+    uint8_t ans =  a - hldata - GetFlag(C);
+
+    SetFlag(Z, !(ans && 0xff));       //zero
+    SetFlag(S,  (ans && 0x80));       //sign
+    SetFlag(P, Parity((uint8_t)ans)); //parity (num of bits is even)
+    SetFlag(C,  (ans > 0xff));        //carry
+    
+    a = (uint8_t) ans;
+    return 0;
+}
+
+//Opcode  instruction  size   flags         function
+//0x9f	  SBB A 	   1	  Z,S,P,CY,AC	A <- A - A - CY
+uint8_t CPU8080::SBBA(){
+
+    uint8_t ans =  a - a - GetFlag(C);
+
+    SetFlag(Z, !(ans && 0xff));       //zero
+    SetFlag(S,  (ans && 0x80));       //sign
+    SetFlag(P, Parity((uint8_t)ans)); //parity (num of bits is even)
+    SetFlag(C,  (ans > 0xff));        //carry
+    
+    a = (uint8_t) ans;
+    return 0;
+}
 
 //-----------------------------------------------------------------------------
 //0xA0
