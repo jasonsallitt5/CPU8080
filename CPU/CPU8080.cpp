@@ -1297,6 +1297,140 @@ uint8_t CPU8080::SBBA(){
 
 //-----------------------------------------------------------------------------
 //0xA0
+
+//Opcode  instruction  size   flags         function
+//0xa0	  ANA B 	   1	  Z,S,P,CY,AC	A <- A & B
+uint8_t CPU8080::ANAB(){
+
+    uint8_t ans =  a & b;
+
+    SetFlag(Z, !(ans && 0xff));       //zero
+    SetFlag(S,  (ans && 0x80));       //sign
+    SetFlag(P, Parity((uint8_t)ans)); //parity (num of bits is even)
+    SetFlag(C,  (ans > 0xff));        //carry
+    
+    a = (uint8_t) ans;
+    return 0;
+}
+
+//Opcode  instruction  size   flags         function
+//0xa1	  ANA C 	   1	  Z,S,P,CY,AC	A <- A & C
+uint8_t CPU8080::ANAC(){
+
+    uint8_t ans =  a & c;
+
+    SetFlag(Z, !(ans && 0xff));       //zero
+    SetFlag(S,  (ans && 0x80));       //sign
+    SetFlag(P, Parity((uint8_t)ans)); //parity (num of bits is even)
+    SetFlag(C,  (ans > 0xff));        //carry
+    
+    a = (uint8_t) ans;
+    return 0;
+}
+
+//Opcode  instruction  size   flags         function
+//0xa2	  ANA D 	   1	  Z,S,P,CY,AC	A <- A & D
+uint8_t CPU8080::ANAD(){
+
+    uint8_t ans =  a & d;
+
+    SetFlag(Z, !(ans && 0xff));       //zero
+    SetFlag(S,  (ans && 0x80));       //sign
+    SetFlag(P, Parity((uint8_t)ans)); //parity (num of bits is even)
+    SetFlag(C,  (ans > 0xff));        //carry
+    
+    a = (uint8_t) ans;
+    return 0;
+}
+
+//Opcode  instruction  size   flags         function
+//0xa3	  ANA E 	   1	  Z,S,P,CY,AC	A <- A & E
+uint8_t CPU8080::ANAE(){
+
+    uint8_t ans =  a & e;
+
+    SetFlag(Z, !(ans && 0xff));       //zero
+    SetFlag(S,  (ans && 0x80));       //sign
+    SetFlag(P, Parity((uint8_t)ans)); //parity (num of bits is even)
+    SetFlag(C,  (ans > 0xff));        //carry
+    
+    a = (uint8_t) ans;
+    return 0;
+}
+
+//Opcode  instruction  size   flags         function
+//0xa4	  ANA H 	   1	  Z,S,P,CY,AC	A <- A & H
+uint8_t CPU8080::ANAH(){
+
+    uint8_t ans =  a & h;
+
+    SetFlag(Z, !(ans && 0xff));       //zero
+    SetFlag(S,  (ans && 0x80));       //sign
+    SetFlag(P, Parity((uint8_t)ans)); //parity (num of bits is even)
+    SetFlag(C,  (ans > 0xff));        //carry
+    
+    a = (uint8_t) ans;
+    return 0;
+}
+
+//Opcode  instruction  size   flags         function
+//0xa5	  ANA L 	   1	  Z,S,P,CY,AC	A <- A & L
+uint8_t CPU8080::ANAL(){
+
+    uint8_t ans =  a & l;
+
+    SetFlag(Z, !(ans && 0xff));       //zero
+    SetFlag(S,  (ans && 0x80));       //sign
+    SetFlag(P, Parity((uint8_t)ans)); //parity (num of bits is even)
+    SetFlag(C,  (ans > 0xff));        //carry
+    
+    a = (uint8_t) ans;
+    return 0;
+}
+
+//Opcode  instruction  size   flags         function
+//0xa6	  ANA M 	   1	  Z,S,P,CY,AC	A <- A & (HL)
+uint8_t CPU8080::ANAM(){
+
+    //cast each to a 16bit, shift h, then add them together
+    uint16_t h16 = (uint16_t) h;
+    h16 = (h16 << 8);
+    uint16_t l16 = (uint16_t) l;
+    uint16_t addrHL = h16 + l16;
+
+    uint8_t hldata = read(addrHL);
+
+    uint8_t ans =  a & hldata;
+
+    SetFlag(Z, !(ans && 0xff));       //zero
+    SetFlag(S,  (ans && 0x80));       //sign
+    SetFlag(P, Parity((uint8_t)ans)); //parity (num of bits is even)
+    SetFlag(C,  (ans > 0xff));        //carry
+    
+    a = (uint8_t) ans;
+    return 0;
+}
+
+
+//Opcode  instruction  size   flags         function
+//0xa7	  ANA A 	   1	  Z,S,P,CY,AC	A <- A & A
+uint8_t CPU8080::ANAA(){
+
+    uint8_t ans =  a & a;
+
+    SetFlag(Z, !(ans && 0xff));       //zero
+    SetFlag(S,  (ans && 0x80));       //sign
+    SetFlag(P, Parity((uint8_t)ans)); //parity (num of bits is even)
+    SetFlag(C,  (ans > 0xff));        //carry
+    
+    a = (uint8_t) ans;
+    return 0;
+}
+
+
+
+
+
 //-----------------------------------------------------------------------------
 //0xB0
 //-----------------------------------------------------------------------------
