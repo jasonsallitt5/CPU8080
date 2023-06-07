@@ -1428,7 +1428,135 @@ uint8_t CPU8080::ANAA(){
 }
 
 
+//Opcode  instruction  size   flags         function
+//0xa8	  XRA B 	   1	  Z,S,P,CY,AC	A <- A ^ B
+uint8_t CPU8080::XRAB(){
 
+    uint8_t ans =  a ^ b;
+
+    SetFlag(Z, !(ans && 0xff));       //zero
+    SetFlag(S,  (ans && 0x80));       //sign
+    SetFlag(P, Parity((uint8_t)ans)); //parity (num of bits is even)
+    SetFlag(C,  (ans > 0xff));        //carry
+    
+    a = (uint8_t) ans;
+    return 0;
+}
+
+
+//Opcode  instruction  size   flags         function
+//0xa9	  XRA C 	   1	  Z,S,P,CY,AC	A <- A ^ C
+uint8_t CPU8080::XRAC(){
+
+    uint8_t ans =  a ^ c;
+
+    SetFlag(Z, !(ans && 0xff));       //zero
+    SetFlag(S,  (ans && 0x80));       //sign
+    SetFlag(P, Parity((uint8_t)ans)); //parity (num of bits is even)
+    SetFlag(C,  (ans > 0xff));        //carry
+    
+    a = (uint8_t) ans;
+    return 0;
+}
+
+//Opcode  instruction  size   flags         function
+//0xaa	  XRA D 	   1	  Z,S,P,CY,AC	A <- A ^ D
+uint8_t CPU8080::XRAD(){
+
+    uint8_t ans =  a ^ d;
+
+    SetFlag(Z, !(ans && 0xff));       //zero
+    SetFlag(S,  (ans && 0x80));       //sign
+    SetFlag(P, Parity((uint8_t)ans)); //parity (num of bits is even)
+    SetFlag(C,  (ans > 0xff));        //carry
+    
+    a = (uint8_t) ans;
+    return 0;
+}
+
+//Opcode  instruction  size   flags         function
+//0xab	  XRA E 	   1	  Z,S,P,CY,AC	A <- A ^ E
+uint8_t CPU8080::XRAE(){
+
+    uint8_t ans =  a ^ d;
+
+    SetFlag(Z, !(ans && 0xff));       //zero
+    SetFlag(S,  (ans && 0x80));       //sign
+    SetFlag(P, Parity((uint8_t)ans)); //parity (num of bits is even)
+    SetFlag(C,  (ans > 0xff));        //carry
+    
+    a = (uint8_t) ans;
+    return 0;
+}
+
+//Opcode  instruction  size   flags         function
+//0xac	  XRA H 	   1	  Z,S,P,CY,AC	A <- A ^ H
+uint8_t CPU8080::XRAH(){
+
+    uint8_t ans =  a ^ h;
+
+    SetFlag(Z, !(ans && 0xff));       //zero
+    SetFlag(S,  (ans && 0x80));       //sign
+    SetFlag(P, Parity((uint8_t)ans)); //parity (num of bits is even)
+    SetFlag(C,  (ans > 0xff));        //carry
+    
+    a = (uint8_t) ans;
+    return 0;
+}
+
+//Opcode  instruction  size   flags         function
+//0xad	  XRA L 	   1	  Z,S,P,CY,AC	A <- A ^ L
+uint8_t CPU8080::XRAL(){
+
+    uint8_t ans =  a ^ l;
+
+    SetFlag(Z, !(ans && 0xff));       //zero
+    SetFlag(S,  (ans && 0x80));       //sign
+    SetFlag(P, Parity((uint8_t)ans)); //parity (num of bits is even)
+    SetFlag(C,  (ans > 0xff));        //carry
+    
+    a = (uint8_t) ans;
+    return 0;
+}
+
+//Opcode  instruction  size   flags         function
+//0xae	  XRA M 	   1	  Z,S,P,CY,AC	A <- A ^ (HL)
+uint8_t CPU8080::XRAM(){
+
+    //cast each to a 16bit, shift h, then add them together
+    uint16_t h16 = (uint16_t) h;
+    h16 = (h16 << 8);
+    uint16_t l16 = (uint16_t) l;
+    uint16_t addrHL = h16 + l16;
+
+    uint8_t hldata = read(addrHL);
+
+    uint8_t ans =  a ^ hldata;
+
+    SetFlag(Z, !(ans && 0xff));       //zero
+    SetFlag(S,  (ans && 0x80));       //sign
+    SetFlag(P, Parity((uint8_t)ans)); //parity (num of bits is even)
+    SetFlag(C,  (ans > 0xff));        //carry
+    
+    a = (uint8_t) ans;
+    return 0;
+}
+
+
+//Opcode  instruction  size   flags         function
+//0xaf	  XRA A 	   1	  Z,S,P,CY,AC	A <- A ^ A
+uint8_t CPU8080::XRAA(){
+
+    uint8_t ans =  a ^ a;
+
+    SetFlag(Z, !(ans && 0xff));       //zero
+    SetFlag(S,  (ans && 0x80));       //sign
+    SetFlag(P, Parity((uint8_t)ans)); //parity (num of bits is even)
+    SetFlag(C,  (ans > 0xff));        //carry
+    
+    a = (uint8_t) ans;
+    return 0;
+}
 
 
 //-----------------------------------------------------------------------------
