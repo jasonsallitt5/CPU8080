@@ -1558,9 +1558,138 @@ uint8_t CPU8080::XRAA(){
     return 0;
 }
 
-
 //-----------------------------------------------------------------------------
 //0xB0
+
+//Opcode  instruction  size   flags         function
+//0xb0	  ORA B 	   1	  Z,S,P,CY,AC	A <- A | B
+uint8_t CPU8080::ORAB(){
+
+    uint8_t ans =  a | b;
+
+    SetFlag(Z, !(ans && 0xff));       //zero
+    SetFlag(S,  (ans && 0x80));       //sign
+    SetFlag(P, Parity((uint8_t)ans)); //parity (num of bits is even)
+    SetFlag(C,  (ans > 0xff));        //carry
+    
+    a = (uint8_t) ans;
+    return 0;
+}
+
+//Opcode  instruction  size   flags         function
+//0xb1	  ORA C 	   1	  Z,S,P,CY,AC	A <- A | C
+uint8_t CPU8080::ORAC(){
+
+    uint8_t ans =  a | c;
+
+    SetFlag(Z, !(ans && 0xff));       //zero
+    SetFlag(S,  (ans && 0x80));       //sign
+    SetFlag(P, Parity((uint8_t)ans)); //parity (num of bits is even)
+    SetFlag(C,  (ans > 0xff));        //carry
+    
+    a = (uint8_t) ans;
+    return 0;
+}
+
+//Opcode  instruction  size   flags         function
+//0xb2	  ORA D 	   1	  Z,S,P,CY,AC	A <- A | D
+uint8_t CPU8080::ORAD(){
+
+    uint8_t ans =  a | d;
+
+    SetFlag(Z, !(ans && 0xff));       //zero
+    SetFlag(S,  (ans && 0x80));       //sign
+    SetFlag(P, Parity((uint8_t)ans)); //parity (num of bits is even)
+    SetFlag(C,  (ans > 0xff));        //carry
+    
+    a = (uint8_t) ans;
+    return 0;
+}
+
+//Opcode  instruction  size   flags         function
+//0xb3	  ORA E 	   1	  Z,S,P,CY,AC	A <- A | E
+uint8_t CPU8080::ORAE(){
+
+    uint8_t ans =  a | e;
+
+    SetFlag(Z, !(ans && 0xff));       //zero
+    SetFlag(S,  (ans && 0x80));       //sign
+    SetFlag(P, Parity((uint8_t)ans)); //parity (num of bits is even)
+    SetFlag(C,  (ans > 0xff));        //carry
+    
+    a = (uint8_t) ans;
+    return 0;
+}
+
+//Opcode  instruction  size   flags         function
+//0xb4	  ORA H 	   1	  Z,S,P,CY,AC	A <- A | H
+uint8_t CPU8080::ORAH(){
+
+    uint8_t ans =  a | h;
+
+    SetFlag(Z, !(ans && 0xff));       //zero
+    SetFlag(S,  (ans && 0x80));       //sign
+    SetFlag(P, Parity((uint8_t)ans)); //parity (num of bits is even)
+    SetFlag(C,  (ans > 0xff));        //carry
+    
+    a = (uint8_t) ans;
+    return 0;
+}
+
+//Opcode  instruction  size   flags         function
+//0xb5	  ORA L 	   1	  Z,S,P,CY,AC	A <- A | L
+uint8_t CPU8080::ORAL(){
+
+    uint8_t ans =  a | l;
+
+    SetFlag(Z, !(ans && 0xff));       //zero
+    SetFlag(S,  (ans && 0x80));       //sign
+    SetFlag(P, Parity((uint8_t)ans)); //parity (num of bits is even)
+    SetFlag(C,  (ans > 0xff));        //carry
+    
+    a = (uint8_t) ans;
+    return 0;
+}
+
+//Opcode  instruction  size   flags         function
+//0xb6	  ORA M 	   1	  Z,S,P,CY,AC	A <- A | (HL)
+uint8_t CPU8080::ORAM(){
+
+    //cast each to a 16bit, shift h, then add them together
+    uint16_t h16 = (uint16_t) h;
+    h16 = (h16 << 8);
+    uint16_t l16 = (uint16_t) l;
+    uint16_t addrHL = h16 + l16;
+
+    uint8_t hldata = read(addrHL);
+
+
+    uint8_t ans =  a | hldata;
+
+    SetFlag(Z, !(ans && 0xff));       //zero
+    SetFlag(S,  (ans && 0x80));       //sign
+    SetFlag(P, Parity((uint8_t)ans)); //parity (num of bits is even)
+    SetFlag(C,  (ans > 0xff));        //carry
+    
+    a = (uint8_t) ans;
+    return 0;
+}
+
+//Opcode  instruction  size   flags         function
+//0xb7	  ORA A 	   1	  Z,S,P,CY,AC	A <- A | A
+uint8_t CPU8080::ORAA(){
+
+    uint8_t ans =  a | a;
+
+    SetFlag(Z, !(ans && 0xff));       //zero
+    SetFlag(S,  (ans && 0x80));       //sign
+    SetFlag(P, Parity((uint8_t)ans)); //parity (num of bits is even)
+    SetFlag(C,  (ans > 0xff));        //carry
+    
+    a = (uint8_t) ans;
+    return 0;
+}
+
 //-----------------------------------------------------------------------------
 //0xC0
 //-----------------------------------------------------------------------------
