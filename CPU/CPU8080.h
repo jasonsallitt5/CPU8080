@@ -265,6 +265,23 @@ private:
 
     //-------------------------------------------------------------------------
     //0xa0
+    uint8_t ANAB();
+    uint8_t ANAC();
+    uint8_t ANAD();
+    uint8_t ANAE();
+    uint8_t ANAH();
+    uint8_t ANAL();
+    uint8_t ANAM();
+    uint8_t ANAA();
+
+    uint8_t XRAB();
+    uint8_t XRAC();
+    uint8_t XRAD();
+    uint8_t XRAE();
+    uint8_t XRAH();
+    uint8_t XRAL();
+    uint8_t XRAM();
+    uint8_t XRAA();
 
     //-------------------------------------------------------------------------
     //0xb0
