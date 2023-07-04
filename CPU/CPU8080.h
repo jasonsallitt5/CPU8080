@@ -285,7 +285,24 @@ private:
 
     //-------------------------------------------------------------------------
     //0xb0
+    uint8_t ORAB();
+    uint8_t ORAC();
+    uint8_t ORAD();
+    uint8_t ORAE();
+    uint8_t ORAH();
+    uint8_t ORAL();
+    uint8_t ORAM();
+    uint8_t ORAA();
 
+    uint8_t CMPB();
+    uint8_t CMPC();
+    uint8_t CMPD();
+    uint8_t CMPE();
+    uint8_t CMPH();
+    uint8_t CMPL();
+    uint8_t CMPM();
+    uint8_t CMPA();
+    
     //-------------------------------------------------------------------------
     //0xc0
     //0xcb is nothing
