@@ -1690,6 +1690,126 @@ uint8_t CPU8080::ORAA(){
     return 0;
 }
 
+//Opcode  instruction  size   flags         function
+//0xb8	  CMP B 	   1	  Z,S,P,CY,AC	A - B
+uint8_t CPU8080::CMPB(){
+
+    uint8_t ans = a - b;
+
+    SetFlag(Z, !(ans && 0xff));       //zero
+    SetFlag(S,  (ans && 0x80));       //sign
+    SetFlag(P, Parity((uint8_t)ans)); //parity (num of bits is even)
+    SetFlag(C,  (ans > 0xff));        //carry
+
+    return 0;
+}
+
+//Opcode  instruction  size   flags         function
+//0xb9	  CMP C 	   1	  Z,S,P,CY,AC	A - C
+uint8_t CPU8080::CMPC(){
+
+    uint8_t ans = a - c;
+
+    SetFlag(Z, !(ans && 0xff));       //zero
+    SetFlag(S,  (ans && 0x80));       //sign
+    SetFlag(P, Parity((uint8_t)ans)); //parity (num of bits is even)
+    SetFlag(C,  (ans > 0xff));        //carry
+
+    return 0;
+}
+
+//Opcode  instruction  size   flags         function
+//0xba	  CMP D 	   1	  Z,S,P,CY,AC	A - D
+uint8_t CPU8080::CMPD(){
+
+    uint8_t ans =  a - d;
+
+    SetFlag(Z, !(ans && 0xff));       //zero
+    SetFlag(S,  (ans && 0x80));       //sign
+    SetFlag(P, Parity((uint8_t)ans)); //parity (num of bits is even)
+    SetFlag(C,  (ans > 0xff));        //carry
+
+    return 0;
+}
+
+//Opcode  instruction  size   flags         function
+//0xbb	  CMP E 	   1	  Z,S,P,CY,AC	A - E
+uint8_t CPU8080::CMPE(){
+
+    uint8_t ans =  a - e;
+
+    SetFlag(Z, !(ans && 0xff));       //zero
+    SetFlag(S,  (ans && 0x80));       //sign
+    SetFlag(P, Parity((uint8_t)ans)); //parity (num of bits is even)
+    SetFlag(C,  (ans > 0xff));        //carry
+
+    return 0;
+}
+
+//Opcode  instruction  size   flags         function
+//0xbc	  CMP H 	   1	  Z,S,P,CY,AC	A - H
+uint8_t CPU8080::CMPH(){
+
+    uint8_t ans =  a - h;
+
+    SetFlag(Z, !(ans && 0xff));       //zero
+    SetFlag(S,  (ans && 0x80));       //sign
+    SetFlag(P, Parity((uint8_t)ans)); //parity (num of bits is even)
+    SetFlag(C,  (ans > 0xff));        //carry
+
+    return 0;
+}
+
+//Opcode  instruction  size   flags         function
+//0xbd	  CMP L 	   1	  Z,S,P,CY,AC	A - L
+uint8_t CPU8080::CMPL(){
+
+    uint8_t ans =  a - l;
+
+    SetFlag(Z, !(ans && 0xff));       //zero
+    SetFlag(S,  (ans && 0x80));       //sign
+    SetFlag(P, Parity((uint8_t)ans)); //parity (num of bits is even)
+    SetFlag(C,  (ans > 0xff));        //carry
+
+    return 0;
+}
+
+//Opcode  instruction  size   flags         function
+//0xbe	  CMP M 	   1	  Z,S,P,CY,AC	A - (HL)
+uint8_t CPU8080::CMPM(){
+
+    //cast each to a 16bit, shift h, then add them together
+    uint16_t h16 = (uint16_t) h;
+    h16 = (h16 << 8);
+    uint16_t l16 = (uint16_t) l;
+    uint16_t addrHL = h16 + l16;
+
+    uint8_t hldata = read(addrHL);
+
+    uint8_t ans =  a - hldata;
+
+    SetFlag(Z, !(ans && 0xff));       //zero
+    SetFlag(S,  (ans && 0x80));       //sign
+    SetFlag(P, Parity((uint8_t)ans)); //parity (num of bits is even)
+    SetFlag(C,  (ans > 0xff));        //carry
+
+    return 0;
+}
+
+//Opcode  instruction  size   flags         function
+//0xbf	  CMP A 	   1	  Z,S,P,CY,AC	A - A
+uint8_t CPU8080::CMPA(){
+
+    uint8_t ans =  a - a;
+
+    SetFlag(Z, !(ans && 0xff));       //zero
+    SetFlag(S,  (ans && 0x80));       //sign
+    SetFlag(P, Parity((uint8_t)ans)); //parity (num of bits is even)
+    SetFlag(C,  (ans > 0xff));        //carry
+
+    return 0;
+}
+
 //-----------------------------------------------------------------------------
 //0xC0
 //-----------------------------------------------------------------------------
