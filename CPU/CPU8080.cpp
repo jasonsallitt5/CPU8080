@@ -33,6 +33,10 @@ CPU8080::~CPU8080()
     //chooses the correct instruction to run
  } 
 
+ int CPU8080::LoadROM(){
+    //loading the ROM starting at address 0 for now
+
+ }
 
 
 //-----------------------------------------------------------------------------
@@ -136,15 +140,28 @@ bool CPU8080::Parity(uint8_t num){
 //-----------------------------------------------------------------------------
 //INTRUCTIONS BY OPCODE
 
-
+//TODO: put this into a separate file
 
 //Opcode  instruction  size   flags     function
 //0x00	  NOP	       1
 uint8_t CPU8080::NOP(){
+    //Doesn't need to do anything expect maybe increment the program counter?
+    return 0;
+}
 
-    std::cout << "NOP()" << std::endl;
+//Opcode  instruction  size   flags     function
+//0x01	  LXI B, D16   3                B <- byte 3, C <-byte 2
+uint8_t CPU8080::LXIBD16(){
+    pc++;
+    c = read(pc);
+    pc++;
+    b = read(pc);
+    return 0;
+}
 
-    //Doesn't need to do anything expect maybe increment the program
+//Opcode  instruction  size   flags     function
+//0x02	  STAX B       1                (BC) <- A
+uint8_t CPU8080::STAXB(){
 
     return 0;
 }

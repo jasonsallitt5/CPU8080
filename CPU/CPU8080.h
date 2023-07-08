@@ -82,7 +82,7 @@ public:
     // void PrintInstructions();
 
     // //maybe createa a seperate one for a single instruction vs storing multiple
-    // int LoadInstructions();
+    int LoadROM();
 
 
 
@@ -125,6 +125,11 @@ private:
     //-------------------------------------------------------------------------
     //0x00
     uint8_t NOP();
+    uint8_t LXIBD16();
+    uint8_t STAXB();
+    uint8_t INXB();
+    uint8_t INRB();
+
     //0x08 is nothing
 
     //-------------------------------------------------------------------------

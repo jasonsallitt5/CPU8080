@@ -21,16 +21,16 @@ int main(){
     string fileName;
     std::cout << "enter file name:";
     std::cin >> fileName;
-
-    //load the file into memory??
-    //or maybe figure out a way to integrate this into the cpu so 
     */
 
     //note: you dont have to make a cpu because the bus already has one
     Bus bus;
 
-    std::string exitFlag;
+    //load the file into memory
+    //bus.cpu.loadROM(fileName);
 
+
+    std::string exitFlag;
 
     //loop that pauses every iteration
     while(exitFlag != "exit"){
@@ -40,9 +40,10 @@ int main(){
         //this could either mean read from a file, or just integrate
         //the disassembler itself into the cpu
 
-        //execute the intruction
-        //the instruction will return a success or failure
-        //cpu.MOVBC();
+        //execute the intruction, need to make the functions public for testing in the
+        // header
+        //bus.cpu.NOP();
+
 
         //what to do if instruction not successful?
         //for now just shut everything down
@@ -52,14 +53,12 @@ int main(){
         bus.cpu.PrintCPU();
         bus.PrintRAM();
 
+        // show next instruction to be executed
+        // meaning you print out what the current pc decodes to
+        // this mean the program counter starts elsewhere
+        // bus.cpu.PrintNextInstruction
 
-
-
-        //increment the program counter??
-        // the disassembler already does this so I could just read it from the file
-        //or find a way to integrate it for use in the cpu which is probably better
-        //maybe do both
-
+        //bus.cpu.runNextInstruction();
 
         std::cout << "any button to increment or type exit:";
         std::cin >> exitFlag;
