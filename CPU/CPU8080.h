@@ -97,7 +97,6 @@ public:
 
 
 private:
-
     //linkage to the communications bus
     //so the cpu will read and write to the bus and then
     //the bus will interact with the ram
@@ -131,7 +130,7 @@ private:
     uint8_t INRB();
     uint8_t DCRB();
     uint8_t MVIBD8();
-
+    uint8_t RLC();
     //0x08 is nothing
 
     //-------------------------------------------------------------------------

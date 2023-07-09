@@ -19,24 +19,24 @@ CPU8080::~CPU8080()
 //-----------------------------------------------------------------------------
 // Disassembling and running
 
- void CPU8080::Disassemble(){
+void CPU8080::Disassemble(){
 
-    //take in the file (rom) and open it
+   //take in the file (rom) and open it
 
-    //run instructions in a loop
-    //right now in a one by one fashion until you figure out how to end a program
-    //have to determine what instruction to run 
+   //run instructions in a loop
+   //right now in a one by one fashion until you figure out how to end a program
+   //have to determine what instruction to run 
 
- } 
+} 
 
- void CPU8080::runInstruction(){
+void CPU8080::runInstruction(){
     //chooses the correct instruction to run
- } 
+} 
 
- int CPU8080::LoadROM(){
+int CPU8080::LoadROM(){
     //loading the ROM starting at address 0 for now
     return 0;
- }
+}
 
 
 //-----------------------------------------------------------------------------
@@ -224,6 +224,22 @@ uint8_t CPU8080::MVIBD8(){
     return 0;
 }
 
+//Opcode  instruction  size   flags     function
+//0x07	  RLC          1      CY        A = A << 1; bit 0 = prev bit; CY = prev bit 7
+uint8_t CPU8080::RLC(){
+    SetFlag(C, (a & 0x80));        //carry
+
+    a = a << 1;
+
+    if(C){
+        //this shifts the 7th bit to the 0th bit 
+        a = a | 0x01;
+    } 
+    
+    return 0;
+}
+
+//Opcode 0x80 does nothing
 
 //-----------------------------------------------------------------------------
 //0x10

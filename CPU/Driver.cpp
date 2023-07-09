@@ -42,7 +42,7 @@ int main(){
 
         //execute the intruction, need to make the functions public for testing in the
         // header
-        //bus.cpu.NOP();
+        //bus.cpu.RLC();
 
 
         //what to do if instruction not successful?
