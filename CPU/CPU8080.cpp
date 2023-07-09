@@ -35,7 +35,7 @@ CPU8080::~CPU8080()
 
  int CPU8080::LoadROM(){
     //loading the ROM starting at address 0 for now
-
+    return 0;
  }
 
 
@@ -162,9 +162,68 @@ uint8_t CPU8080::LXIBD16(){
 //Opcode  instruction  size   flags     function
 //0x02	  STAX B       1                (BC) <- A
 uint8_t CPU8080::STAXB(){
+    // a is stored in the memory location referred to by (BC)
+    uint16_t b16 = (uint16_t) b;
+    b16 = (b16 << 8);
+    uint16_t c16 = (uint16_t) c;
+    uint16_t addrBC = b16 + c16;
+
+    write(addrBC, a);
 
     return 0;
 }
+
+//Opcode  instruction  size   flags     function
+//0x03	  INX B        1                (BC) <- (BC) + 1 
+uint8_t CPU8080::INXB(){
+
+    uint16_t b16 = (uint16_t) b;
+    b16 = (b16 << 8);
+    uint16_t c16 = (uint16_t) c;
+    uint16_t addrBC = b16 + c16;
+
+    addrBC += 1;
+
+	c = (uint8_t) (addrBC);
+	b = (uint8_t) (addrBC >> 8);
+
+    return 0;
+}
+
+//Opcode  instruction  size   flags     function
+//0x04	  INR B        1      Z,S,P,AC  B <- B + 1 
+uint8_t CPU8080::INRB(){
+    b += 1;
+
+    SetFlag(Z, !(b && 0xff));       //zero
+    SetFlag(S,  (b && 0x80));       //sign
+    SetFlag(P, Parity((uint8_t)b)); //parity (num of bits is even)
+
+    return 0;
+}
+
+//Opcode  instruction  size   flags     function
+//0x05	  DCR B        1      Z,S,P,AC  B <- B - 1 
+uint8_t CPU8080::DCRB(){
+    b -= 1;
+
+    SetFlag(Z, !(b && 0xff));       //zero
+    SetFlag(S,  (b && 0x80));       //sign
+    SetFlag(P, Parity((uint8_t)b)); //parity (num of bits is even)
+
+    return 0;
+}
+
+//Opcode  instruction  size   flags     function
+//0x06	  MVI B,D8     2                B <- byte 2 
+uint8_t CPU8080::MVIBD8(){
+
+    pc++;
+    b = read(pc);
+
+    return 0;
+}
+
 
 //-----------------------------------------------------------------------------
 //0x10

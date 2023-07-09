@@ -129,6 +129,8 @@ private:
     uint8_t STAXB();
     uint8_t INXB();
     uint8_t INRB();
+    uint8_t DCRB();
+    uint8_t MVIBD8();
 
     //0x08 is nothing
 
