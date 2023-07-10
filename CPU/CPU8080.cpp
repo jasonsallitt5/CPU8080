@@ -239,7 +239,114 @@ uint8_t CPU8080::RLC(){
     return 0;
 }
 
-//Opcode 0x80 does nothing
+//Opcode 0x08 does nothing
+
+//Opcode  instruction  size   flags     function
+//0x09	  DAD B        1      CY        HL = HL + BC 
+uint8_t CPU8080::DADB(){
+
+    uint16_t h16 = (uint16_t) h;
+    h16 = (h16 << 8);
+    uint16_t l16 = (uint16_t) l;
+    uint16_t addrHL = h16 + l16;
+
+    uint16_t b16 = (uint16_t) b;
+    b16 = (b16 << 8);
+    uint16_t c16 = (uint16_t) c;
+    uint16_t addrBC = b16 + c16;
+
+
+    uint32_t ans = addrHL + addrBC; 
+
+    SetFlag(C,  (ans > 0xff));        //carry
+
+    //put the answer into hl
+	l = (uint8_t) (ans);
+	h = (uint8_t) (ans >> 8);
+
+
+    return 0;
+}
+
+//Opcode  instruction  size   flags     function
+//0x0a	  LDAX B       1                A <- (BC) 
+uint8_t CPU8080::LDAXB(){
+    
+    uint16_t b16 = (uint16_t) b;
+    b16 = (b16 << 8);
+    uint16_t c16 = (uint16_t) c;
+    uint16_t addrBC = b16 + c16;
+
+    a = read(addrBC);
+
+    return 0;
+}
+
+//Opcode  instruction  size   flags     function
+//0x0b	  DCX B        1                A <- (BC) 
+uint8_t CPU8080::DCXB(){
+
+    uint16_t b16 = (uint16_t) b;
+    b16 = (b16 << 8);
+    uint16_t c16 = (uint16_t) c;
+    uint16_t addrBC = b16 + c16;
+
+    addrBC -= 1;
+
+	c = (uint8_t) (addrBC);
+	b = (uint8_t) (addrBC >> 8);
+    
+    return 0;
+}
+
+//Opcode  instruction  size   flags     function
+//0x0c	  INR C        1      Z,S,P,AC  C <- C + 1 
+uint8_t CPU8080::INRC(){
+    c += 1;
+
+    SetFlag(Z, !(b && 0xff));       //zero
+    SetFlag(S,  (b && 0x80));       //sign
+    SetFlag(P, Parity((uint8_t)b)); //parity (num of bits is even)
+
+    return 0;
+}
+
+//Opcode  instruction  size   flags     function
+//0x0d	  DCR C        1      Z,S,P,AC  C <- C - 1 
+uint8_t CPU8080::DCRC(){
+    c -= 1;
+
+    SetFlag(Z, !(b && 0xff));       //zero
+    SetFlag(S,  (b && 0x80));       //sign
+    SetFlag(P, Parity((uint8_t)b)); //parity (num of bits is even)
+
+    return 0;
+}
+
+//Opcode  instruction  size   flags     function
+//0x0e	  MVI C,D8     2                C <- byte 2 
+uint8_t CPU8080::MVICD8(){
+    pc++;
+    c = read(pc);
+
+    return 0;
+}
+
+//Opcode  instruction  size   flags     function
+//0x0f	  RRC          1                A = A >> 1; bit 7 = prev bit 0; CY = prev bit 0; 
+uint8_t CPU8080::RRC(){
+    SetFlag(C, (a & 0x01));        //carry
+
+    a = a >> 1;
+
+    if(C){
+        //this shifts the 0th bit to the 7th bit 
+        a = a | 0x80;
+    } 
+ 
+    return 0;
+}
+
 
 //-----------------------------------------------------------------------------
 //0x10
@@ -247,6 +354,8 @@ uint8_t CPU8080::RLC(){
 //0x20
 //-----------------------------------------------------------------------------
 //0x30
+
+
 //-----------------------------------------------------------------------------
 //0x40
 

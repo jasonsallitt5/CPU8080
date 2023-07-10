@@ -131,7 +131,16 @@ private:
     uint8_t DCRB();
     uint8_t MVIBD8();
     uint8_t RLC();
+
     //0x08 is nothing
+    uint8_t DADB();
+    uint8_t LDAXB();
+    uint8_t DCXB();
+    uint8_t INRC();
+    uint8_t DCRC();
+    uint8_t MVICD8();
+    uint8_t RRC();
+
 
     //-------------------------------------------------------------------------
     //0x10
