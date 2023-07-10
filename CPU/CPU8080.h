@@ -82,7 +82,7 @@ public:
     // void PrintInstructions();
 
     // //maybe createa a seperate one for a single instruction vs storing multiple
-    // int LoadInstructions();
+    int LoadROM();
 
 
 
@@ -97,7 +97,6 @@ public:
 
 
 private:
-
     //linkage to the communications bus
     //so the cpu will read and write to the bus and then
     //the bus will interact with the ram
@@ -125,7 +124,23 @@ private:
     //-------------------------------------------------------------------------
     //0x00
     uint8_t NOP();
+    uint8_t LXIBD16();
+    uint8_t STAXB();
+    uint8_t INXB();
+    uint8_t INRB();
+    uint8_t DCRB();
+    uint8_t MVIBD8();
+    uint8_t RLC();
+
     //0x08 is nothing
+    uint8_t DADB();
+    uint8_t LDAXB();
+    uint8_t DCXB();
+    uint8_t INRC();
+    uint8_t DCRC();
+    uint8_t MVICD8();
+    uint8_t RRC();
+
 
     //-------------------------------------------------------------------------
     //0x10

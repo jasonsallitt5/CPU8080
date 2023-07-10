@@ -19,20 +19,24 @@ CPU8080::~CPU8080()
 //-----------------------------------------------------------------------------
 // Disassembling and running
 
- void CPU8080::Disassemble(){
+void CPU8080::Disassemble(){
 
-    //take in the file (rom) and open it
+   //take in the file (rom) and open it
 
-    //run instructions in a loop
-    //right now in a one by one fashion until you figure out how to end a program
-    //have to determine what instruction to run 
+   //run instructions in a loop
+   //right now in a one by one fashion until you figure out how to end a program
+   //have to determine what instruction to run 
 
- } 
+} 
 
- void CPU8080::runInstruction(){
+void CPU8080::runInstruction(){
     //chooses the correct instruction to run
- } 
+} 
 
+int CPU8080::LoadROM(){
+    //loading the ROM starting at address 0 for now
+    return 0;
+}
 
 
 //-----------------------------------------------------------------------------
@@ -136,18 +140,213 @@ bool CPU8080::Parity(uint8_t num){
 //-----------------------------------------------------------------------------
 //INTRUCTIONS BY OPCODE
 
-
+//TODO: put this into a separate file
 
 //Opcode  instruction  size   flags     function
 //0x00	  NOP	       1
 uint8_t CPU8080::NOP(){
+    //Doesn't need to do anything expect maybe increment the program counter?
+    return 0;
+}
 
-    std::cout << "NOP()" << std::endl;
+//Opcode  instruction  size   flags     function
+//0x01	  LXI B, D16   3                B <- byte 3, C <-byte 2
+uint8_t CPU8080::LXIBD16(){
+    pc++;
+    c = read(pc);
+    pc++;
+    b = read(pc);
+    return 0;
+}
 
-    //Doesn't need to do anything expect maybe increment the program
+//Opcode  instruction  size   flags     function
+//0x02	  STAX B       1                (BC) <- A
+uint8_t CPU8080::STAXB(){
+    // a is stored in the memory location referred to by (BC)
+    uint16_t b16 = (uint16_t) b;
+    b16 = (b16 << 8);
+    uint16_t c16 = (uint16_t) c;
+    uint16_t addrBC = b16 + c16;
+
+    write(addrBC, a);
 
     return 0;
 }
+
+//Opcode  instruction  size   flags     function
+//0x03	  INX B        1                (BC) <- (BC) + 1 
+uint8_t CPU8080::INXB(){
+
+    uint16_t b16 = (uint16_t) b;
+    b16 = (b16 << 8);
+    uint16_t c16 = (uint16_t) c;
+    uint16_t addrBC = b16 + c16;
+
+    addrBC += 1;
+
+	c = (uint8_t) (addrBC);
+	b = (uint8_t) (addrBC >> 8);
+
+    return 0;
+}
+
+//Opcode  instruction  size   flags     function
+//0x04	  INR B        1      Z,S,P,AC  B <- B + 1 
+uint8_t CPU8080::INRB(){
+    b += 1;
+
+    SetFlag(Z, !(b && 0xff));       //zero
+    SetFlag(S,  (b && 0x80));       //sign
+    SetFlag(P, Parity((uint8_t)b)); //parity (num of bits is even)
+
+    return 0;
+}
+
+//Opcode  instruction  size   flags     function
+//0x05	  DCR B        1      Z,S,P,AC  B <- B - 1 
+uint8_t CPU8080::DCRB(){
+    b -= 1;
+
+    SetFlag(Z, !(b && 0xff));       //zero
+    SetFlag(S,  (b && 0x80));       //sign
+    SetFlag(P, Parity((uint8_t)b)); //parity (num of bits is even)
+
+    return 0;
+}
+
+//Opcode  instruction  size   flags     function
+//0x06	  MVI B,D8     2                B <- byte 2 
+uint8_t CPU8080::MVIBD8(){
+
+    pc++;
+    b = read(pc);
+
+    return 0;
+}
+
+//Opcode  instruction  size   flags     function
+//0x07	  RLC          1      CY        A = A << 1; bit 0 = prev bit; CY = prev bit 7
+uint8_t CPU8080::RLC(){
+    SetFlag(C, (a & 0x80));        //carry
+
+    a = a << 1;
+
+    if(C){
+        //this shifts the 7th bit to the 0th bit 
+        a = a | 0x01;
+    } 
+    
+    return 0;
+}
+
+//Opcode 0x08 does nothing
+
+//Opcode  instruction  size   flags     function
+//0x09	  DAD B        1      CY        HL = HL + BC 
+uint8_t CPU8080::DADB(){
+
+    uint16_t h16 = (uint16_t) h;
+    h16 = (h16 << 8);
+    uint16_t l16 = (uint16_t) l;
+    uint16_t addrHL = h16 + l16;
+
+    uint16_t b16 = (uint16_t) b;
+    b16 = (b16 << 8);
+    uint16_t c16 = (uint16_t) c;
+    uint16_t addrBC = b16 + c16;
+
+
+    uint32_t ans = addrHL + addrBC; 
+
+    SetFlag(C,  (ans > 0xff));        //carry
+
+    //put the answer into hl
+	l = (uint8_t) (ans);
+	h = (uint8_t) (ans >> 8);
+
+
+    return 0;
+}
+
+//Opcode  instruction  size   flags     function
+//0x0a	  LDAX B       1                A <- (BC) 
+uint8_t CPU8080::LDAXB(){
+    
+    uint16_t b16 = (uint16_t) b;
+    b16 = (b16 << 8);
+    uint16_t c16 = (uint16_t) c;
+    uint16_t addrBC = b16 + c16;
+
+    a = read(addrBC);
+
+    return 0;
+}
+
+//Opcode  instruction  size   flags     function
+//0x0b	  DCX B        1                A <- (BC) 
+uint8_t CPU8080::DCXB(){
+
+    uint16_t b16 = (uint16_t) b;
+    b16 = (b16 << 8);
+    uint16_t c16 = (uint16_t) c;
+    uint16_t addrBC = b16 + c16;
+
+    addrBC -= 1;
+
+	c = (uint8_t) (addrBC);
+	b = (uint8_t) (addrBC >> 8);
+    
+    return 0;
+}
+
+//Opcode  instruction  size   flags     function
+//0x0c	  INR C        1      Z,S,P,AC  C <- C + 1 
+uint8_t CPU8080::INRC(){
+    c += 1;
+
+    SetFlag(Z, !(b && 0xff));       //zero
+    SetFlag(S,  (b && 0x80));       //sign
+    SetFlag(P, Parity((uint8_t)b)); //parity (num of bits is even)
+
+    return 0;
+}
+
+//Opcode  instruction  size   flags     function
+//0x0d	  DCR C        1      Z,S,P,AC  C <- C - 1 
+uint8_t CPU8080::DCRC(){
+    c -= 1;
+
+    SetFlag(Z, !(b && 0xff));       //zero
+    SetFlag(S,  (b && 0x80));       //sign
+    SetFlag(P, Parity((uint8_t)b)); //parity (num of bits is even)
+
+    return 0;
+}
+
+//Opcode  instruction  size   flags     function
+//0x0e	  MVI C,D8     2                C <- byte 2 
+uint8_t CPU8080::MVICD8(){
+    pc++;
+    c = read(pc);
+
+    return 0;
+}
+
+//Opcode  instruction  size   flags     function
+//0x0f	  RRC          1                A = A >> 1; bit 7 = prev bit 0; CY = prev bit 0; 
+uint8_t CPU8080::RRC(){
+    SetFlag(C, (a & 0x01));        //carry
+
+    a = a >> 1;
+
+    if(C){
+        //this shifts the 0th bit to the 7th bit 
+        a = a | 0x80;
+    } 
+ 
+    return 0;
+}
+
 
 //-----------------------------------------------------------------------------
 //0x10
@@ -155,6 +354,8 @@ uint8_t CPU8080::NOP(){
 //0x20
 //-----------------------------------------------------------------------------
 //0x30
+
+
 //-----------------------------------------------------------------------------
 //0x40
 
