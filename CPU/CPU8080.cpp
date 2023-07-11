@@ -225,7 +225,7 @@ uint8_t CPU8080::MVIBD8(){
 }
 
 //Opcode  instruction  size   flags     function
-//0x07	  RLC          1      CY        A = A << 1; bit 0 = prev bit; CY = prev bit 7
+//0x07	  RLC          1      CY        A = A << 1; bit 0 = prev bit 7; CY = prev bit 7
 uint8_t CPU8080::RLC(){
     SetFlag(C, (a & 0x80));        //carry
 
@@ -350,6 +350,104 @@ uint8_t CPU8080::RRC(){
 
 //-----------------------------------------------------------------------------
 //0x10
+//0x10 is nothing
+
+//Opcode  instruction  size   flags     function
+//0x11	  LXI D, D16   3                D <- byte 3, E <-byte 2
+uint8_t CPU8080::LXIDD16(){
+    pc++;
+    e = read(pc);
+    pc++;
+    d = read(pc);
+    return 0;
+}
+
+//Opcode  instruction  size   flags     function
+//0x12	  STAX D       1                (DE) <- A
+uint8_t CPU8080::STAXD(){
+    // a is stored in the memory location referred to by (BC)
+    uint16_t d16 = (uint16_t) d;
+    d16 = (d16 << 8);
+    uint16_t e16 = (uint16_t) e;
+    uint16_t addrDE = d16 + e16;
+
+    write(addrDE, a);
+
+    return 0;
+}
+
+//Opcode  instruction  size   flags     function
+//0x13	  INX D        1                (DE) <- (DE) + 1 
+uint8_t CPU8080::INXD(){
+
+    uint16_t d16 = (uint16_t) d;
+    d16 = (d16 << 8);
+    uint16_t e16 = (uint16_t) e;
+    uint16_t addrDE = d16 + e16;
+
+    addrDE += 1;
+
+	e = (uint8_t) (addrDE);
+	d = (uint8_t) (addrDE >> 8);
+
+    return 0;
+}
+
+//Opcode  instruction  size   flags     function
+//0x14	  INR D        1      Z,S,P,AC  D <- D + 1 
+uint8_t CPU8080::INRD(){
+    d += 1;
+
+    SetFlag(Z, !(d && 0xff));       //zero
+    SetFlag(S,  (d && 0x80));       //sign
+    SetFlag(P, Parity((uint8_t)d)); //parity (num of bits is even)
+
+    return 0;
+}
+
+//Opcode  instruction  size   flags     function
+//0x15	  DCR D        1      Z,S,P,AC  D <- D - 1 
+uint8_t CPU8080::DCRD(){
+    d -= 1;
+
+    SetFlag(Z, !(d && 0xff));       //zero
+    SetFlag(S,  (d && 0x80));       //sign
+    SetFlag(P, Parity((uint8_t)d)); //parity (num of bits is even)
+
+    return 0;
+}
+
+//Opcode  instruction  size   flags     function
+//0x16	  MVI D,D8     2                D <- byte 2 
+uint8_t CPU8080::MVIDD8(){
+
+    pc++;
+    d = read(pc);
+
+    return 0;
+}
+
+//Opcode  instruction  size   flags     function
+//0x17	  RAL          1      CY        A = A << 1; bit 0 = prev bit CY; CY = prev bit 7
+uint8_t CPU8080::RAL(){
+    bool PrevCY = GetFlag(C);
+
+    SetFlag(C, (a & 0x80));        //carry
+
+    a = a << 1;
+
+    if(PrevCY){
+        //this shifts the 7th bit to the 0th bit 
+        a = a | 0x01;
+    } 
+    
+    return 0;
+}
+
+//0x18 is nothing 
+
+
+
 //-----------------------------------------------------------------------------
 //0x20
 //-----------------------------------------------------------------------------
