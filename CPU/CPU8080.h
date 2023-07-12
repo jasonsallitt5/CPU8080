@@ -154,6 +154,13 @@ private:
     uint8_t RAL();
 
     //0x18 is nothing 
+    uint8_t DADD();
+    uint8_t LDAXD();
+    uint8_t DCXD();
+    uint8_t INRE();
+    uint8_t DCRE();
+    uint8_t MVIED8();
+    uint8_t RAR();
 
     //-------------------------------------------------------------------------
     //0x20
