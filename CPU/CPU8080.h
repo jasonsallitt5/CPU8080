@@ -145,7 +145,22 @@ private:
     //-------------------------------------------------------------------------
     //0x10
     //0x10 is nothing 
+    uint8_t LXIDD16();
+    uint8_t STAXD();
+    uint8_t INXD();
+    uint8_t INRD();
+    uint8_t DCRD();
+    uint8_t MVIDD8();
+    uint8_t RAL();
+
     //0x18 is nothing 
+    uint8_t DADD();
+    uint8_t LDAXD();
+    uint8_t DCXD();
+    uint8_t INRE();
+    uint8_t DCRE();
+    uint8_t MVIED8();
+    uint8_t RAR();
 
     //-------------------------------------------------------------------------
     //0x20
