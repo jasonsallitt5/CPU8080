@@ -60,7 +60,7 @@ public:
         P = (1 << 2),  //Parity, if the numner of 1 bits in the result is even, this is 0100
         
         AC = (1 << 4), //Auxillary carry, used for binary-coded decimal also called A
-                       //AC is apparently only used in 1 instruction DAA
+                       //AC is only used in 1 instruction: DAA
 
         Z = (1 << 6),  //Zero
         S = (1 << 7)   //Sign bit
@@ -164,7 +164,15 @@ private:
 
     //-------------------------------------------------------------------------
     //0x20
-    //0x20 is nothing 
+    //0x20 is nothing
+    uint8_t LXIHD16();
+    uint8_t SHLDadr();
+    uint8_t INXH();
+    uint8_t INRH();
+    uint8_t DCRH();
+    uint8_t MVIHD8();
+    uint8_t DAA();
+
     //0x28 is nothing 
 
     //-------------------------------------------------------------------------

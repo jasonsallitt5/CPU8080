@@ -558,6 +558,127 @@ uint8_t CPU8080::RAR(){
 
 //-----------------------------------------------------------------------------
 //0x20
+
+//0x20 is nothing
+
+//Opcode  instruction  size   flags     function
+//0x21	  LXI H, D16   3                H <- byte 3, L <-byte 2
+uint8_t CPU8080::LXIHD16(){
+    pc++;
+    l = read(pc);
+    pc++;
+    h = read(pc);
+    return 0;
+}
+
+//Opcode  instruction  size   flags     function
+//0x22	  SHLD adr     3                (adr)<-L; (adr+1)<-H
+uint8_t CPU8080::SHLDadr(){
+
+    //get the address first combine then put the data in
+    pc++;
+    uint8_t firstAddr = (uint16_t) read(pc);
+    pc++;
+    uint8_t secondAddr = (uint16_t) read(pc);
+
+    firstAddr = firstAddr << 8; //bitshifting the first part of the addr
+    uint16_t addr = firstAddr + secondAddr;
+
+    //then put the data in addr and addr+1
+    write(addr, l);
+    write(addr, h);
+
+    return 0;
+}
+
+//Opcode  instruction  size   flags     function
+//0x23	  INX H        1                (HL) <- (HL) + 1 
+uint8_t CPU8080::INXH(){
+
+    uint16_t h16 = (uint16_t) h;
+    h16 = (h16 << 8);
+    uint16_t l16 = (uint16_t) l;
+    uint16_t addrHL = h16 + l16;
+
+    addrHL += 1;
+
+	c = (uint8_t) (addrHL);
+	b = (uint8_t) (addrHL >> 8);
+
+    return 0;
+}
+
+//Opcode  instruction  size   flags     function
+//0x24	  INR H        1      Z,S,P,AC  H <- H + 1 
+uint8_t CPU8080::INRH(){
+    h += 1;
+
+    SetFlag(Z, !(h && 0xff));       //zero
+    SetFlag(S,  (h && 0x80));       //sign
+    SetFlag(P, Parity((uint8_t)h)); //parity (num of bits is even)
+
+    return 0;
+}
+
+//Opcode  instruction  size   flags     function
+//0x25	  DCR H        1      Z,S,P,AC  H <- H - 1 
+uint8_t CPU8080::DCRH(){
+    h -= 1;
+
+    SetFlag(Z, !(h && 0xff));       //zero
+    SetFlag(S,  (h && 0x80));       //sign
+    SetFlag(P, Parity((uint8_t)h)); //parity (num of bits is even)
+
+    return 0;
+}
+
+//Opcode  instruction  size   flags     function
+//0x26	  MVI H,D8     2                h <- byte 2 
+uint8_t CPU8080::MVIHD8(){
+
+    pc++;
+    h = read(pc);
+
+    return 0;
+}
+
+//Opcode  instruction  size   flags     function
+//0x27	  DAA          2                special 
+uint8_t CPU8080::DAA(){
+    /*
+     Description:
+     the 8 bit hex number in the accumlator (a register) is adjusted to 
+     form 2, 4-bit binary coded decimal digits by the following steps
+
+        1) if the least significant bits of the accumulator represents a num
+           greater than 9, or if the Aux carry bit = 1, the accumulator is 
+           incremented by 6, otherwise no incrementing occurs        
+        2) if the most significant 4 bits of the accumulator now represent
+           a number greater than 9 or if the Aux carry = 1 or if the normal
+           carry bit = 1, the most significiant 4 bits of the accumulator are
+           incremented by 6. otherwise no incrementing occurs
+
+    if a carry out of the least significant bit occurs during step , the Aux
+    carry is set; otherwise it is reset. Likewise if a carry out of the most 
+    signifiicant 4 bits occurs in step 2, the normal carry is set. otherwise
+    it is unaffected
+
+    Note: this instruction is used when adding decimals and is the only 
+          instruction that uses the Aux carry bit 
+    */
+
+
+    return 0;
+}
+
+
+
+
+
+
+
+
+
 //-----------------------------------------------------------------------------
 //0x30
 
